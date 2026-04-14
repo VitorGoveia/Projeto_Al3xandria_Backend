@@ -1,5 +1,6 @@
 from flask import jsonify, make_response
 from src.Application.Controllers.user_controller import UserController
+from src.Application.Controllers.game_controller import GameController
 
 def register_routes(app):
     @app.route('/api', methods=['GET'])
@@ -30,3 +31,18 @@ def register_routes(app):
         return UserController.login_user()
     
 #CadastroJogo
+    @app.route('/slug_game/<string:name>', methods=['GET'])
+    def route_get_slug_name(name):
+        return GameController.get_slug_name(name)
+    
+    @app.route('/game/<string:name>', methods=['GET'])
+    def route_get_get_game_by_slug_name(name):
+        return GameController.get_game_by_slug_name(name)
+    
+    @app.route('/game', methods=['POST'])
+    def route_post_register_game():
+        return GameController.register_game()
+    
+    @app.route('/usergame', methods=['POST'])
+    def route_register_user_game():
+        return GameController.register_user_game()
