@@ -1,6 +1,9 @@
 from flask import request, jsonify, make_response
 from src.Application.Service.user_service import UserService
 from src.Infrastructure.Model.User_model import UserModel
+from flask_jwt_extended import create_access_token
+from datetime import timedelta
+import re
 
 class UserController:
     @staticmethod
@@ -66,3 +69,27 @@ class UserController:
             return make_response(jsonify({"erro":"Usuário não encontrado"}), 404)
         return jsonify({"mensagem": "Usuário inativado com sucesso!!!"})
  
+    @staticmethod
+    def login_user():
+        try:
+            data = request.get_json()
+            
+            if not data:
+                return make_response(jsonify({"erro": "Dados JSON são obrigatórios"}), 400)
+            
+            result, status_code = UserService.login_user(**data)
+            
+            if status_code != 200:
+                return make_response(jsonify(result), status_code)
+            
+            token = create_access_token(identity=str(result.id), expires_delta=timedelta(hours=1))
+
+            return make_response(jsonify({
+                "access_token": token,
+                "token_type": "bearer",
+                "expires_in": 3600,
+                "user_id": result.id
+            }), 200)
+            
+        except Exception as e:
+            return make_response(jsonify({"erro": "Erro interno do servidor"}), 500)

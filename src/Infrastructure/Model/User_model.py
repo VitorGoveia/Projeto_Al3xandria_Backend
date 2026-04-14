@@ -8,7 +8,7 @@ class UserModel(db.Model):
     email = db.Column(db.String(120), nullable=False)
     celular = db.Column(db.String(14), nullable=False)
     senha = db.Column(db.String(16), nullable=False)
-    status = db.Column(db.String(10), nullable=False, default='Inativo')
+    status = db.Column(db.String(10), nullable=False, default='Ativo')
 
     def to_dict(self):
         return {

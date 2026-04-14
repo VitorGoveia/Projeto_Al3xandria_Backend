@@ -45,4 +45,38 @@ class UserService:
         
         db.session.commit()
         return True
+    
+
+    
+    @staticmethod
+    def _validar_dados_obrigatorios(data, campos_obrigatorios):
+        campos_faltantes = [campo for campo in campos_obrigatorios if campo not in data]
+        if campos_faltantes:
+            return False, {"erro": f"Campos obrigatórios faltando: {campos_faltantes}"}, 400
+        return True, None, None
+    
+    
+    
+    @staticmethod
+    def login_user(**credentials):
+        try:
+            campos_obrigatorios = ["email", "password"]
+            valido, erro, status = UserService._validar_dados_obrigatorios(credentials, campos_obrigatorios)
+            if not valido:
+                return erro, status
+            
+            user = UserModel.query.filter_by(email=credentials["email"]).first()
+            
+            if not user:
+                return {"erro": "Email ou senha inválidos"}, 401
+                        
+            if user.status != "Ativo":
+                return {"erro": "Usuário inativo. Faça a ativação da conta."}, 403
+            
+            return user, 200
+            
+        except Exception as e:
+            raise e
+        
+
         

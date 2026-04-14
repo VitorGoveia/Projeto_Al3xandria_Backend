@@ -24,3 +24,9 @@ def register_routes(app):
     def route_delete_user(user_id):
         return UserController.delete_user(user_id)
  
+#Login
+    @app.route('/login', methods=['POST'])
+    def route_login_user():
+        return UserController.login_user()
+    
+#CadastroJogo
