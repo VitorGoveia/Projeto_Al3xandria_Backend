@@ -14,7 +14,7 @@ key = 'e18914f7d42442ed93ccb77333915330'
 class GameService:
     @staticmethod
     def get_slug_name(name):
-        url = f'https://api.rawg.io/api/games?search={name}&key={key}'
+        url = f'https://api.rawg.io/api/games?search={name}&key={key}&exclude_additions=true&parent_platforms=1,2,3,7,9,11'
 
         possible_matches = []
         results = requests.get(url).json()["results"]

@@ -36,7 +36,7 @@ def register_routes(app):
         return GameController.get_slug_name(name)
     
     @app.route('/game/<string:name>', methods=['GET'])
-    def route_get_get_game_by_slug_name(name):
+    def route_get_game_by_slug_name(name):
         return GameController.get_game_by_slug_name(name)
     
     @app.route('/game', methods=['POST'])
