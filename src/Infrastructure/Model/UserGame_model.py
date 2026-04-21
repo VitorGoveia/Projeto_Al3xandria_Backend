@@ -9,7 +9,7 @@ class UserGameModel(db.Model):
 
     added_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     status = db.Column(db.String(100), nullable=False)
-    user_rate = db.Column(db.Integer, nullable=False)
+    user_rate = db.Column(db.Integer, nullable=False, default=0)
 
     user = db.relationship("UserModel", backref="user_games")
     game = db.relationship("GameModel", backref="user_games")

@@ -45,4 +45,5 @@ def register_routes(app):
     
     @app.route('/usergame', methods=['POST'])
     def route_register_user_game():
-        return GameController.register_user_game()
+        retorno = GameController.register_user_game()
+        return retorno["msg"], retorno["erro"]

@@ -14,17 +14,18 @@ key = 'e18914f7d42442ed93ccb77333915330'
 class GameService:
     @staticmethod
     def get_slug_name(name):
-        url = f'https://api.rawg.io/api/games?search={name}&key={key}&exclude_additions=true&parent_platforms=1,2,3,7,9,11'
+        url = f'https://api.rawg.io/api/games?search={name}&key={key}&exclude_additions=true&parent_platforms=1,2,3,7,9,11&page_size=40'
 
         possible_matches = []
         results = requests.get(url).json()["results"]
 
         for item in results:
-            possible_matches.append({
-                "slug_name": item["slug"],
-                "name": item["name"],
-                "capa": item["background_image"]
-            })
+            if item["metacritic"] or item["added"] > 100:
+                possible_matches.append({
+                    "slug_name": item["slug"],
+                    "name": item["name"],
+                    "capa": item["background_image"]
+                })
         
         return possible_matches
     

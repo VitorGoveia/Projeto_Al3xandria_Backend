@@ -25,8 +25,17 @@ class GameController:
     @staticmethod
     def register_user_game():
         data = request.get_json()
-        user_data = data["user_data"]
-        game_data = data["game_data"]
+        if data["user_data"] and data["game_data"]:
+            user_data = data["user_data"]
+            game_data = data["game_data"]
 
-        return GameService.register_user_game(user_data, game_data)
+            try: 
+                retorno = GameService.register_user_game(user_data, game_data)
+                print(retorno)
+                return {"msg": "Jogo registrado com sucesso", "erro": 201}
+            
+            except Exception as e:
+                return {"msg": f"Ocorreu um erro: {e}", "erro": 400}
+        
+        else: return {"msg": f"Dados faltantes", "erro": 404}
 
