@@ -47,3 +47,7 @@ def register_routes(app):
     def route_register_user_game():
         retorno = GameController.register_user_game()
         return retorno["msg"], retorno["erro"]
+    
+    @app.route('/usergame/<int:user_id>', methods=["GET"])
+    def get_games_by_user(user_id):
+        return GameController.get_games_by_user_id(user_id)

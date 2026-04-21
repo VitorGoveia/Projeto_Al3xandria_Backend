@@ -39,3 +39,6 @@ class GameController:
         
         else: return {"msg": f"Dados faltantes", "erro": 404}
 
+    @staticmethod
+    def get_games_by_user_id(user_id):
+        return GameService.get_games_by_user(user_id)

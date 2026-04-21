@@ -101,3 +101,32 @@ class GameService:
         db.session.add(new_user_game_bd)
         db.session.commit()
         return new_user_game_bd
+    
+
+    @staticmethod
+    def get_games_by_user(user_id):
+        user = UserModel.query.get(user_id)
+        if not user:
+            return {"Erro": "Usuário não encontrado", "code": 404}
+        
+        game_items = UserGameModel.query.filter_by(user_id=user_id).all()
+        user_games = []
+        
+        for item in game_items:
+            game = GameModel.query.get(item.game_id)
+            user_rate = UserGameModel.query.filter_by(
+                user_id=user_id,
+                game_id=game.rawg_id
+            ).first().user_rate
+            user_games.append(
+                {
+                    "name": game.nome,
+                    "description": game.description,
+                    "image": game.imagem,
+                    "release_date": game.release_date,
+                    "meta_score": game.meta_score,
+                    "user_rate": user_rate
+                }
+            )
+        
+        return user_games
