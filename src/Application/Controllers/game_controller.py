@@ -6,12 +6,10 @@ class GameController:
     @staticmethod
     def get_slug_name(name):
         return GameService.get_slug_name(name)
-    
 
     @staticmethod
     def get_game_by_slug_name(slug_name):
         return GameService.get_game_by_slug_name(slug_name)
-
 
     @staticmethod
     def register_game():
@@ -21,7 +19,7 @@ class GameController:
             "mensagem": "Jogo salvo com sucesso",
             "usuarios": jogo
         }), 200)
-    
+
     @staticmethod
     def register_user_game():
         data = request.get_json()
@@ -29,16 +27,33 @@ class GameController:
             user_data = data["user_data"]
             game_data = data["game_data"]
 
-            try: 
+            try:
                 retorno = GameService.register_user_game(user_data, game_data)
                 print(retorno)
                 return {"msg": "Jogo registrado com sucesso", "erro": 201}
-            
+
             except Exception as e:
                 return {"msg": f"Ocorreu um erro: {e}", "erro": 400}
-        
-        else: return {"msg": f"Dados faltantes", "erro": 404}
+
+        else:
+            return {"msg": f"Dados faltantes", "erro": 404}
 
     @staticmethod
     def get_games_by_user_id(user_id):
         return GameService.get_games_by_user(user_id)
+
+    @staticmethod
+    def update_game(rawg_id):
+        data = request.get_json()
+
+        jogo_atualizado = GameService.update_game(rawg_id, data)
+
+        if not jogo_atualizado:
+            return make_response(jsonify({
+                "erro": "Jogo não encontrado"
+            }), 404)
+
+        return make_response(jsonify({
+            "mensagem": "Jogo atualizado com sucesso",
+            "jogo": jogo_atualizado
+        }), 200)

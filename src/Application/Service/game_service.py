@@ -11,6 +11,7 @@ from src.Infrastructure.Model.UserGame_model import UserGameModel
 
 key = 'e18914f7d42442ed93ccb77333915330'
 
+
 class GameService:
     @staticmethod
     def get_slug_name(name):
@@ -26,9 +27,9 @@ class GameService:
                     "name": item["name"],
                     "capa": item["background_image"]
                 })
-        
+
         return possible_matches
-    
+
     @staticmethod
     def get_game_by_slug_name(slug_name):
         chosed_game = slug_name
@@ -52,17 +53,19 @@ class GameService:
         rawg_id = data["rawg_id"]
         game = GameModel.query.filter_by(rawg_id=rawg_id).first()
         if not game:
-            new_game = GameDomain(rawg_id=rawg_id, nome=data["nome"], imagem=data["imagem"], slug_name=data["slug_name"], meta_score=data["meta_score"], url_meta_score=data["url_meta_score"], release_date=data["release_date"], website=data["website"], description=data["description"])
+            new_game = GameDomain(rawg_id=rawg_id, nome=data["nome"], imagem=data["imagem"], slug_name=data["slug_name"], meta_score=data["meta_score"],
+                                  url_meta_score=data["url_meta_score"], release_date=data["release_date"], website=data["website"], description=data["description"])
 
-            game_register = GameModel(nome=new_game.nome, imagem=new_game.imagem, slug_name=new_game.slug_name, meta_score=new_game.meta_score, url_meta_score=new_game.url_meta_score, release_date=new_game.release_date, website=new_game.website, description=new_game.description, rawg_id=new_game.rawg_id)
+            game_register = GameModel(nome=new_game.nome, imagem=new_game.imagem, slug_name=new_game.slug_name, meta_score=new_game.meta_score,
+                                      url_meta_score=new_game.url_meta_score, release_date=new_game.release_date, website=new_game.website, description=new_game.description, rawg_id=new_game.rawg_id)
 
             db.session.add(game_register)
             db.session.commit()
             return game_register.to_dict()
-            
+
         else:
             return game.to_dict()
-        
+
     @staticmethod
     def register_user_game(user_data, data):
         user_id = user_data["user_id"]
@@ -70,7 +73,7 @@ class GameService:
         user = UserModel.query.get(user_id)
         if not user:
             return {"Erro": "Usuário não encontrado", "code": 404}
-        
+
         game = GameService.register_game(data)
         existing_relation = UserGameModel.query.filter_by(
             user_id=user_id,
@@ -79,13 +82,13 @@ class GameService:
 
         if existing_relation:
             return {"Erro": "Jogo já está na sua biblioteca", "code": 400}
-        
+
         user_game_object = {
             "user_id": user_id,
             "game_id": data["rawg_id"],
             "user_rate": user_rate
         }
-        
+
         new_user_game = UserGameDomain(
             user_id, user_game_object["game_id"], user_rate
         )
@@ -101,17 +104,16 @@ class GameService:
         db.session.add(new_user_game_bd)
         db.session.commit()
         return new_user_game_bd
-    
 
     @staticmethod
     def get_games_by_user(user_id):
         user = UserModel.query.get(user_id)
         if not user:
             return {"Erro": "Usuário não encontrado", "code": 404}
-        
+
         game_items = UserGameModel.query.filter_by(user_id=user_id).all()
         user_games = []
-        
+
         for item in game_items:
             game = GameModel.query.get(item.game_id)
             user_rate = UserGameModel.query.filter_by(
@@ -128,5 +130,25 @@ class GameService:
                     "user_rate": user_rate
                 }
             )
-        
+
         return user_games
+
+    @staticmethod
+    def update_game(rawg_id, data):
+        game = GameModel.query.filter_by(rawg_id=rawg_id).first()
+
+        if not game:
+            return None
+
+        game.nome = data.get("nome", game.nome)
+        game.imagem = data.get("imagem", game.imagem)
+        game.slug_name = data.get("slug_name", game.slug_name)
+        game.meta_score = data.get("meta_score", game.meta_score)
+        game.url_meta_score = data.get("url_meta_score", game.url_meta_score)
+        game.release_date = data.get("release_date", game.release_date)
+        game.website = data.get("website", game.website)
+        game.description = data.get("description", game.description)
+
+        db.session.commit()
+
+        return game.to_dict()
