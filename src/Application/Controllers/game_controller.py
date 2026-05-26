@@ -57,3 +57,16 @@ class GameController:
             "mensagem": "Jogo atualizado com sucesso",
             "jogo": jogo_atualizado
         }), 200)
+
+    @staticmethod
+    def remove_user_game(user_id, game_id):
+
+        retorno, status = GameService.remove_user_game(
+            user_id,
+            game_id
+        )
+
+        return make_response(
+            jsonify(retorno),
+            status
+        )

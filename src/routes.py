@@ -22,9 +22,12 @@ def register_routes(app):
     def route_update_user(user_id):
         return UserController.update_user(user_id)
 
-    @app.route('/user/<int:user_id>', methods=['DELETE'])
-    def route_delete_user(user_id):
-        return UserController.delete_user(user_id)
+    @app.route('/usergame/<int:user_id>/<int:game_id>', methods=['DELETE'])
+    def route_remove_user_game(user_id, game_id):
+        return GameController.remove_user_game(
+            user_id,
+            game_id
+        )
 
 # Login
     @app.route('/login', methods=['POST'])
@@ -47,6 +50,10 @@ def register_routes(app):
     @app.route('/game/<int:rawg_id>', methods=['PUT'])
     def route_update_game(rawg_id):
         return GameController.update_game(rawg_id)
+
+    @app.route('/game/<int:rawg_id>', methods=['DELETE'])
+    def route_delete_game(rawg_id):
+        return GameController.delete_game(rawg_id)
 
     @app.route('/usergame', methods=['POST'])
     def route_register_user_game():

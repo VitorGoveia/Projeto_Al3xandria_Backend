@@ -122,6 +122,10 @@ class GameService:
             ).first().user_rate
             user_games.append(
                 {
+                    "rawg_id": game.rawg_id,       # <-- adicionado
+                    "slug_name": game.slug_name,   # <-- adicionado
+                    "website": game.website,       # <-- adicionado
+                    "url_meta_score": game.url_meta_score, # <-- adicionado
                     "name": game.nome,
                     "description": game.description,
                     "image": game.imagem,
@@ -152,3 +156,23 @@ class GameService:
         db.session.commit()
 
         return game.to_dict()
+
+    @staticmethod
+    def remove_user_game(user_id, game_id):
+
+        relation = UserGameModel.query.filter_by(
+            user_id=user_id,
+            game_id=game_id
+        ).first()
+
+        if not relation:
+            return {
+                "erro": "Jogo não encontrado na biblioteca"
+            }, 404
+
+        db.session.delete(relation)
+        db.session.commit()
+
+        return {
+            "mensagem": "Jogo removido da biblioteca"
+        }, 200
