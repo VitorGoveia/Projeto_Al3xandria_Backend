@@ -72,7 +72,7 @@ class UserService:
                 return {"erro": "Email ou senha inválidos"}, 401
 
             if user.status != "Ativo":
-                return {"erro": "Usuário inativo. Faça a ativação da conta."}, 403
+                return {"erro": "Usuário inativo/não existe."}, 403
 
             return user, 200
 

@@ -22,6 +22,10 @@ def register_routes(app):
     def route_update_user(user_id):
         return UserController.update_user(user_id)
 
+    @app.route('/user/<int:user_id>', methods=['DELETE'])
+    def route_delete_user(user_id):
+        return UserController.delete_user(user_id)
+
     @app.route('/usergame/<int:user_id>/<int:game_id>', methods=['DELETE'])
     def route_remove_user_game(user_id, game_id):
         return GameController.remove_user_game(
